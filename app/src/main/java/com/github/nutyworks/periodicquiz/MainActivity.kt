@@ -1,6 +1,9 @@
 package com.github.nutyworks.periodicquiz
 
+import android.content.Intent
+import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,16 +17,19 @@ import java.io.InputStream
 
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private lateinit var elementsInstance: Elements
+        val elements
+            get() = elementsInstance.elements
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.element_recycler)
 
-        val rawJson = loadFileFromAsset("periodic_table.json")
-        val gson = Gson()
-        val elements = gson.fromJson(rawJson, Elements::class.java)
-
-        val str = StringBuffer()
-        elements.elements.joinTo(str) { element -> element.symbol }
+        val json = loadFileFromAsset("periodic_table.json")
+        elementsInstance = Gson().fromJson(json, Elements::class.java)
 
         val recyclerView = findViewById<RecyclerView>(R.id.element_recycler_view)
 
@@ -36,14 +42,18 @@ class MainActivity : AppCompatActivity() {
 
         Slush.SingleType<Element>()
             .setItemLayout(R.layout.element_binding)
-            .setItems(elements.elements)
+            .setItems(elements)
             .setLayoutManager(LinearLayoutManager(this))
             .onBind { binding, element ->
                 binding.element_symbol.text = element.symbol
                 binding.element_category.text = element.category
             }
             .onItemClick { _, i ->
-                Toast.makeText(this, elements.elements[i].name, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, elements[i].name, Toast.LENGTH_SHORT).show()
+                Intent(this, ElementInfoActivity::class.java).apply {
+                    putExtra(ElementInfoActivity.ELEMENT_INFO_NUMBER, i)
+                    startActivity(this)
+                }
             }
             .into(recyclerView)
     }
@@ -53,8 +63,7 @@ class MainActivity : AppCompatActivity() {
      * @return raw content of file
      */
     private fun loadFileFromAsset(fileName: String): String? {
-        var json: String? = null
-        json = try {
+        return try {
             val inputStream: InputStream = assets.open(fileName)
             val size: Int = inputStream.available()
             val buffer = ByteArray(size)
@@ -65,6 +74,5 @@ class MainActivity : AppCompatActivity() {
             ex.printStackTrace()
             return null
         }
-        return json
     }
 }
