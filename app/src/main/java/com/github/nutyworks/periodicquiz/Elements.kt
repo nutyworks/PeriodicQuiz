@@ -10,23 +10,18 @@ import java.io.InputStream
 import java.io.Serializable
 
 class Elements {
-
     var elements = mutableListOf<Element>()
-
-    fun initialize() {
-    }
-
 }
 
 data class Element(
     val name: String,
     val appearance: String,
-    val atomicMass: Float,
+    val atomic_mass: Float,
     val boil: Float,
     val category: String,
     val color: String,
     val density: Float,
-    val discoveredBy: String,
+    val discovered_by: String,
     val melt: Float,
     val molarHeat: Float,
     val namedBy: String,
