@@ -32,8 +32,8 @@ class SelectQuizActivity : AppCompatActivity() {
     private fun nextQuiz() {
         val selectQuizFragment = SelectQuizFragment.newInstance(
             quizManager.makeQuiz(
-                MainActivity.elements.map { element -> element.melt },
-                MainActivity.elements.map { element -> element.boil }
+                MainActivity.elements.map { element -> element.symbol },
+                MainActivity.elements.map { element -> element.name }
             )
         )
 
@@ -44,7 +44,6 @@ class SelectQuizActivity : AppCompatActivity() {
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
-//            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             replace(R.id.select_quiz_placeholder, selectQuizFragment)
             addToBackStack(null)
             commit()

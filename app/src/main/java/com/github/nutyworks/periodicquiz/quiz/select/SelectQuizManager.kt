@@ -1,7 +1,5 @@
 package com.github.nutyworks.periodicquiz.quiz.select
 
-import android.app.Activity
-import android.util.Log
 import com.github.nutyworks.periodicquiz.QuizInfo
 
 class SelectQuizManager(private val activity: SelectQuizActivity) {

@@ -6,9 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.view.children
 import com.github.nutyworks.periodicquiz.QuizInfo
 import com.github.nutyworks.periodicquiz.R
@@ -23,6 +24,7 @@ private const val ARG_QUIZ_INFO = "quiz_info"
  */
 class SelectQuizFragment : Fragment() {
     private var qi: QuizInfo? = null
+    private var isAnimationFinished = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,13 +42,39 @@ class SelectQuizFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val questionText = view.findViewById<TextView>(R.id.question_text)
+        super.onViewCreated(view, savedInstanceState);
+
         val answerGroupLayout = view.findViewById<LinearLayout>(R.id.answer_group_layout)
 
-        if (qi != null) {
-            questionText?.text = qi!!.question
-            setButtonAnswers(answerGroupLayout!!, qi!!.answerList)
-            setButtonHandlers(answerGroupLayout, qi!!.correctAnswer)
+        qi?.let {
+            question_text?.text = it.question
+            setButtonAnswers(answerGroupLayout!!, it.answerList)
+            setButtonHandlers(answerGroupLayout, it.correctAnswer)
+        }
+    }
+
+    override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
+        var anim = super.onCreateAnimation(transit, enter, nextAnim)
+
+        if (anim == null && nextAnim != 0) {
+            anim = AnimationUtils.loadAnimation(activity, nextAnim)
+        }
+
+        return anim?.let {
+            anim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation?) {
+                    isAnimationFinished = false
+                }
+
+                override fun onAnimationEnd(animation: Animation?) {
+                    isAnimationFinished = true
+                }
+
+                override fun onAnimationRepeat(animation: Animation?) {
+                }
+            })
+
+            it
         }
     }
 
@@ -54,7 +82,10 @@ class SelectQuizFragment : Fragment() {
         answersLayout.removeAllViews()
         answers.forEach { answer ->
             answersLayout.addView(
-                Button(answersLayout.context).apply { this.text = answer }
+                Button(answersLayout.context).apply {
+                    this.text = answer
+                    this.isAllCaps = false
+                }
             )
         }
     }
@@ -62,15 +93,19 @@ class SelectQuizFragment : Fragment() {
     private fun setButtonHandlers(answersLayout: LinearLayout, correctAnswer: Int) {
         answersLayout.children.forEachIndexed { i, button ->
             button.setOnClickListener {
+                Log.d("button onclick", isAnimationFinished.toString())
+                if (!it.isEnabled || !isAnimationFinished) return@setOnClickListener
+
                 (activity as SelectQuizActivity).quizManager.onSelectAnswer(i)
+                disableButtons(answersLayout)
+                it.setOnClickListener(null)
             }
         }
     }
 
-    fun disableButtons() {
-        answer_group_layout.children.forEach { button ->
+    private fun disableButtons(answersLayout: LinearLayout) {
+        answersLayout.children.forEach { button ->
             button.isEnabled = false
-            button.setOnClickListener(null)
         }
     }
 
