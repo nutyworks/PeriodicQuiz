@@ -1,19 +1,10 @@
 package com.github.nutyworks.periodicquiz
 
-import android.content.res.AssetFileDescriptor
-import android.content.res.AssetManager
-import android.content.res.AssetManager.AssetInputStream
-import android.content.res.Resources
-import com.google.gson.Gson
-import java.io.IOException
-import java.io.InputStream
-import java.io.Serializable
-
 class Elements {
     var elements = mutableListOf<Element>()
 }
 
-data class Element(
+class Element(
     val name: String,
     val appearance: String,
     val atomic_mass: Float,
@@ -41,3 +32,4 @@ data class Element(
     val electronegativity_pauling: Float,
     val ionization_energies: List<Float>
 )
+

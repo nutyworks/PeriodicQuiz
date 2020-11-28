@@ -1,4 +1,4 @@
-package com.github.nutyworks.periodicquiz
+package com.github.nutyworks.periodicquiz.quiz
 
 import java.io.Serializable
 

@@ -1,4 +1,4 @@
-package com.github.nutyworks.periodicquiz.quiz.select
+package com.github.nutyworks.periodicquiz.quiz
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.core.view.children
-import com.github.nutyworks.periodicquiz.QuizInfo
 import com.github.nutyworks.periodicquiz.R
 import kotlinx.android.synthetic.main.fragment_select_quiz.*
 

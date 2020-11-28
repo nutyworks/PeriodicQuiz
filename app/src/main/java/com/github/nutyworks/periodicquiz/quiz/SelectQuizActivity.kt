@@ -1,16 +1,23 @@
-package com.github.nutyworks.periodicquiz.quiz.select
+package com.github.nutyworks.periodicquiz.quiz
 
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.github.nutyworks.periodicquiz.MainActivity
-import com.github.nutyworks.periodicquiz.R
+import com.github.nutyworks.periodicquiz.*
 import kotlinx.android.synthetic.main.activity_select_quiz.*
+import kotlin.properties.Delegates
+
+const val SELECTED_QUESTION_TYPE = "com.github.nutyworks.periodicquiz.SELECTED_QUESTION_TYPE"
+const val SELECTED_ANSWER_TYPE = "com.github.nutyworks.periodicquiz.SELECTED_ANSWER_TYPE"
 
 class SelectQuizActivity : AppCompatActivity() {
 
     val quizManager = SelectQuizManager(this)
+
+    var selectedQuestionType by Delegates.notNull<String>()
+    var selectedAnswerType by Delegates.notNull<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +25,16 @@ class SelectQuizActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        nextQuiz()
+        selectedQuestionType = ElementProperty.values()[
+            intent.getIntExtra(SELECTED_QUESTION_TYPE, -1)
+        ].toString().screamingSnakeCaseToSnakeCase()
+        selectedAnswerType = ElementProperty.values()[
+                intent.getIntExtra(SELECTED_ANSWER_TYPE, -1)
+        ].toString().screamingSnakeCaseToSnakeCase()
+
+        Log.i("SQA_onCreate", "$selectedQuestionType, $selectedAnswerType")
+
+        nextQuiz(selectedQuestionType, selectedAnswerType)
         updateIndicator()
     }
 
@@ -29,11 +45,11 @@ class SelectQuizActivity : AppCompatActivity() {
         )
     }
 
-    private fun nextQuiz() {
+    private fun nextQuiz(questionType: String, answerType: String) {
         val selectQuizFragment = SelectQuizFragment.newInstance(
             quizManager.makeQuiz(
-                MainActivity.elements.map { element -> element.symbol },
-                MainActivity.elements.map { element -> element.name }
+                MainActivity.elements.map { element -> element.asMap()[questionType] },
+                MainActivity.elements.map { element -> element.asMap()[answerType] }
             )
         )
 
@@ -51,7 +67,7 @@ class SelectQuizActivity : AppCompatActivity() {
     }
 
     fun onAnswerSelected() {
-        nextQuiz()
+        nextQuiz(selectedQuestionType, selectedAnswerType)
         updateIndicator()
     }
 

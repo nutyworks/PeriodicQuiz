@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".quiz.select.SelectQuizActivity"></activity>
+        <activity android:name=".quiz.QuizOptionActivity"></activity>
+        <activity android:name=".quiz.SelectQuizActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"

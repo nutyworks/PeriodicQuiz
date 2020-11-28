@@ -22,4 +22,6 @@
 
     <!-- Multi-select quiz -->
     <string name="correct_wrong_indicator">Correct: %d, Wrong: %d</string>
+    <string name="question_as">Question as: </string>
+    <string name="answer_as">Answer as:</string>
 </resources>

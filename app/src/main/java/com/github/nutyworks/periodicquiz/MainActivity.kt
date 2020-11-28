@@ -7,7 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import com.github.nutyworks.periodicquiz.quiz.select.SelectQuizActivity
+import com.github.nutyworks.periodicquiz.quiz.QuizOptionActivity
+import com.github.nutyworks.periodicquiz.quiz.SelectQuizActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.IOException
@@ -29,8 +30,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         quiz_btn.setOnClickListener {
-//            Toast.makeText(this, "Wow quiz button", Toast.LENGTH_SHORT).show()
-            Intent(this, SelectQuizActivity::class.java).apply {
+            Intent(this, QuizOptionActivity::class.java).apply {
                 startActivity(this)
             }
         }
