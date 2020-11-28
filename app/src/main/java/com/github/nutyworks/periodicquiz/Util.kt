@@ -1,6 +1,5 @@
 package com.github.nutyworks.periodicquiz
 
-import android.annotation.SuppressLint
 import kotlin.reflect.full.memberProperties
 
 fun String.screamingSnakeCaseToNormal(): String =
