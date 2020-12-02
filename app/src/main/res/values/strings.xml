@@ -20,8 +20,13 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="action_search">Search</string>
 
-    <!-- Multi-select quiz -->
+    <!-- Quiz -->
     <string name="correct_wrong_indicator">Correct: %d, Wrong: %d</string>
     <string name="question_as">Question as: </string>
-    <string name="answer_as">Answer as:</string>
+    <string name="answer_as">Answer with:</string>
+    <string name="quit_quiz_confirm">Do you want to quit the quiz?</string>
+
+    <!-- Yes/no -->
+    <string name="positive_answer">Yes</string>
+    <string name="negative_answer">No</string>
 </resources>

@@ -28,12 +28,15 @@ class QuizOptionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz_option)
 
-        val sharedPreferences = getSharedPreferences(DEFAULT_QUIZ_OPTION_PREF, Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(
+            DEFAULT_QUIZ_OPTION_PREF,
+            Context.MODE_PRIVATE
+        )
 
 
         quiz_start.setOnClickListener {
             startActivity(
-                Intent(this, SelectQuizActivity::class.java).apply {
+                Intent(this, QuizActivity::class.java).apply {
                     putExtra(SELECTED_QUESTION_TYPE, selectedQuestionType)
                     putExtra(SELECTED_ANSWER_TYPE, selectedAnswerType)
                 }
@@ -73,7 +76,7 @@ class QuizOptionActivity : AppCompatActivity() {
             }
         }
 
-        answer_as_spinner.setSelection(sharedPreferences.getInt(DEFAULT_ANSWER_TYPE_PREF, 0))
+        answer_as_spinner.setSelection(sharedPreferences.getInt(DEFAULT_ANSWER_TYPE_PREF, 11))
         answer_as_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,

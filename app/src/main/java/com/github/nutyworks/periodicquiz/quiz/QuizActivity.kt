@@ -6,27 +6,28 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.github.nutyworks.periodicquiz.*
-import kotlinx.android.synthetic.main.activity_select_quiz.*
+import kotlinx.android.synthetic.main.activity_quiz.*
+import java.util.*
 import kotlin.properties.Delegates
 
 const val SELECTED_QUESTION_TYPE = "com.github.nutyworks.periodicquiz.SELECTED_QUESTION_TYPE"
 const val SELECTED_ANSWER_TYPE = "com.github.nutyworks.periodicquiz.SELECTED_ANSWER_TYPE"
 
-class SelectQuizActivity : AppCompatActivity() {
+class QuizActivity : AppCompatActivity() {
 
-    val quizManager = SelectQuizManager(this)
+    val quizManager = QuizManager(this, EnumSet.of(QuizType.MULTIPLE_CHOICE))
 
     var selectedQuestionType by Delegates.notNull<String>()
     var selectedAnswerType by Delegates.notNull<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_select_quiz)
+        setContentView(R.layout.activity_quiz)
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         selectedQuestionType = ElementProperty.values()[
-            intent.getIntExtra(SELECTED_QUESTION_TYPE, -1)
+                intent.getIntExtra(SELECTED_QUESTION_TYPE, -1)
         ].toString().screamingSnakeCaseToSnakeCase()
         selectedAnswerType = ElementProperty.values()[
                 intent.getIntExtra(SELECTED_ANSWER_TYPE, -1)
@@ -39,10 +40,12 @@ class SelectQuizActivity : AppCompatActivity() {
     }
 
     private fun updateIndicator() {
-        indicator.text = getString(R.string.correct_wrong_indicator).format(
-            quizManager.results.filter { it }.size,
-            quizManager.results.filter { !it }.size
-        )
+        indicator.text = quizManager.info.quizzes.filter { it.answered }.let { answered ->
+            getString(R.string.correct_wrong_indicator).format(
+                answered.filter { it.isCorrect() }.size,
+                answered.filter { !it.isCorrect() }.size
+            )
+        }
     }
 
     private fun nextQuiz(questionType: String, answerType: String) {
@@ -73,11 +76,11 @@ class SelectQuizActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         AlertDialog.Builder(this)
-            .setMessage("퀴즈를 종료하시겠습니까?")
-            .setPositiveButton("Yes") { _, _ ->
+            .setMessage(getString(R.string.quit_quiz_confirm))
+            .setPositiveButton(getString(R.string.positive_answer)) { _, _ ->
                 navigateUpTo(Intent(baseContext, MainActivity::class.java))
             }
-            .setNegativeButton("No") { _, _ -> }
+            .setNegativeButton(getString(R.string.negative_answer)) { _, _ -> }
             .create()
             .show()
     }

@@ -22,13 +22,13 @@ private const val ARG_QUIZ_INFO = "quiz_info"
  * create an instance of this fragment.
  */
 class SelectQuizFragment : Fragment() {
-    private var qi: QuizInfo? = null
+    private var qd: QuizData? = null
     private var isAnimationFinished = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            qi = it.getSerializable(ARG_QUIZ_INFO) as? QuizInfo
+            qd = it.getSerializable(ARG_QUIZ_INFO) as? QuizData
         }
     }
 
@@ -45,10 +45,10 @@ class SelectQuizFragment : Fragment() {
 
         val answerGroupLayout = view.findViewById<LinearLayout>(R.id.answer_group_layout)
 
-        qi?.let {
+        qd?.let {
             question_text?.text = it.question
-            setButtonAnswers(answerGroupLayout!!, it.answerList)
-            setButtonHandlers(answerGroupLayout, it.correctAnswer)
+            setButtonAnswers(answerGroupLayout!!, it.answers)
+            setButtonHandlers(answerGroupLayout, it.correctAnswer as Int)
         }
     }
 
@@ -95,7 +95,7 @@ class SelectQuizFragment : Fragment() {
                 Log.d("button onclick", isAnimationFinished.toString())
                 if (!it.isEnabled || !isAnimationFinished) return@setOnClickListener
 
-                (activity as SelectQuizActivity).quizManager.onSelectAnswer(i)
+                (activity as QuizActivity).quizManager.onSelectAnswer(i)
                 disableButtons(answersLayout)
                 it.setOnClickListener(null)
             }
@@ -118,10 +118,10 @@ class SelectQuizFragment : Fragment() {
          * @return A new instance of fragment BlankFragment.
          */
         @JvmStatic
-        fun newInstance(quizInfo: QuizInfo) =
+        fun newInstance(quizData: QuizData) =
             SelectQuizFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(ARG_QUIZ_INFO, quizInfo)
+                    putSerializable(ARG_QUIZ_INFO, quizData)
                 }
             }
     }
